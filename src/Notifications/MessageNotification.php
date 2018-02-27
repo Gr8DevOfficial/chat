@@ -10,7 +10,7 @@ use Musonza\Chat\Messages\Message;
 
 class MessageNotification extends Eloquent
 {
-    protected $fillable = ['user_id', 'message_id', 'conversation_id'];
+    protected $fillable = ['user_id', 'message_id', 'conversation_id', 'message'];
 
     protected $table = 'mc_message_notification';
 
@@ -41,6 +41,7 @@ class MessageNotification extends Eloquent
             $notification[] = [
                 'user_id'         => $user->id,
                 'message_id'      => $message->id,
+                'message'         => $message,
                 'conversation_id' => $conversation->id,
                 'is_seen'         => $is_sender,
                 'is_sender'       => $is_sender,
@@ -57,6 +58,7 @@ class MessageNotification extends Eloquent
             if ($message->user_id === $user->id) {
                 $user->notify(new MessageSent([
                     'message_id'      => $message->id,
+                    'message'         => $message,
                     'conversation_id' => $conversation->id,
                     'outgoing'        => true,
                 ]));
@@ -67,6 +69,7 @@ class MessageNotification extends Eloquent
 
         Notification::send($recipients, new MessageSent([
             'message_id'      => $message->id,
+            'message'         => $message,
             'conversation_id' => $conversation->id,
         ]));
     }

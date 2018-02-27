@@ -129,4 +129,8 @@ class Message extends Eloquent
     {
         $this->getNotification($user)->markAsRead();
     }
+
+    public function additions() {
+        return $this->hasOne('App\StickerMessage', 'message_id', 'id');
+    }
 }
